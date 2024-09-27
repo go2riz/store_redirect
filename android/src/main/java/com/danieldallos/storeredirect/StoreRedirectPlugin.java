@@ -8,7 +8,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,6 +29,7 @@ public class StoreRedirectPlugin implements MethodCallHandler, FlutterPlugin, Ac
   public static void registerWith(Registrar registrar) {
     StoreRedirectPlugin instance = new StoreRedirectPlugin();
     instance.onAttachedToEngine(registrar.messenger());
+    instance.onAttachedToActivity(registrar.activity()); // Update to associate activity
   }
 
   @Override
@@ -50,22 +51,19 @@ public class StoreRedirectPlugin implements MethodCallHandler, FlutterPlugin, Ac
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     if (call.method.equals("redirect")) {
-
-      String appId = (String) call.argument("android_id");
-      String appPackageName;
-
-      if (appId != null) {
-        appPackageName = appId;
-      } else {
-        appPackageName = this.activity.getPackageName();
-      }
+      String appId = call.argument("android_id");
+      String appPackageName = (appId != null) ? appId : this.activity.getPackageName();
 
       Intent marketIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName));
-      marketIntent.addFlags(
-          Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-      this.activity.startActivity(marketIntent);
+      marketIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
-      result.success(null);
+      // Check if the activity is not null before starting the intent
+      if (this.activity != null) {
+        this.activity.startActivity(marketIntent);
+        result.success(null);
+      } else {
+        result.error("ACTIVITY_NULL", "Activity is null, cannot start intent.", null);
+      }
     } else {
       result.notImplemented();
     }
