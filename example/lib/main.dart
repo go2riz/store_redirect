@@ -1,33 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:store_redirect/store_redirect.dart';
 
-void main() => runApp(new MyApp());
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => new _MyAppState();
+void main() {
+  runApp(const MyApp());
 }
 
-class _MyAppState extends State<MyApp> {
-  @override
-  initState() {
-    super.initState();
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new Scaffold(
-        appBar: new AppBar(title: new Text('Launch App Redirect')),
-        body: new Center(
-          child: new ElevatedButton(
-            child: new Text("Redirect App"),
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Store Redirect Example')),
+        body: Center(
+          child: ElevatedButton(
             onPressed: () {
               StoreRedirect.redirect(
-                androidAppId: "com.iyaffle.rangoli",
-                iOSAppId: "585027354",
+                androidAppId: 'com.iyaffle.rangoli',
+                iOSAppId: '585027354',
               );
             },
+            child: const Text('Redirect App'),
           ),
         ),
       ),

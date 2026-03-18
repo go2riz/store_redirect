@@ -1,8 +1,8 @@
 name: store_redirect
 description: A Flutter plugin to redirect users to an app page in Google Play Store and Apple App Store.
-version: 2.0.2
-author: Daniel Dallos <flutter@danieldallos.com>
+version: 2.0.2+flutterfix.1
 homepage: https://github.com/Danesz/store_redirect
+repository: https://github.com/Danesz/store_redirect
 
 dependencies:
   flutter:
@@ -22,5 +22,5 @@ flutter:
         pluginClass: StoreRedirectPlugin
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=1.12.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.16.0"
